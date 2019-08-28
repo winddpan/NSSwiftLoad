@@ -10,7 +10,7 @@ easily bridge Objective-C +load to Swift
 ``` 
 class SwiftClassNeedsToStaticLoad: NSSwiftLoadProtocol {
     class func swiftLoad() {
-		print("swiftLoaded!")
+        print("swiftLoaded!")
     }
 } 
 ```
