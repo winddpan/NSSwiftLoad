@@ -11,10 +11,12 @@
 #import <dlfcn.h>
 #import <mach-o/ldsyms.h>
 
-/// 测试遍历检测耗时0.016s
-///
-void loadNSSwiftLoadProtocolImplementClasses()
-{
+@interface NSSwiftLoader : NSObject
+@end
+
+@implementation NSSwiftLoader
+
++ (void)load {
     int numClasses = 0, newNumClasses = objc_getClassList(NULL, 0);
     Class *classes = NULL;
     
@@ -33,11 +35,4 @@ void loadNSSwiftLoadProtocolImplementClasses()
     free(classes);
 }
 
-@interface NSSwiftLoader : NSObject
-@end
-
-@implementation NSSwiftLoader
-+ (void)load {
-    loadNSSwiftLoadProtocolImplementClasses();
-}
 @end
