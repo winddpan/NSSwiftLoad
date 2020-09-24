@@ -15,19 +15,22 @@
 ///
 void loadNSSwiftLoadProtocolImplementClasses()
 {
-    unsigned int count;
-    const char **classes;
-    Dl_info info;
-    dladdr(&_mh_execute_header, &info);
-    classes = objc_copyClassNamesForImage(info.dli_fname, &count);
+    int numClasses = 0, newNumClasses = objc_getClassList(NULL, 0);
+    Class *classes = NULL;
     
-    for (int i = 0; i < count; i++) {
-        NSString *className = [NSString stringWithCString:classes[i] encoding:NSUTF8StringEncoding];
-        Class class = NSClassFromString(className);
-        if (class_conformsToProtocol(class, @protocol(NSSwiftLoadProtocol))) {
-            [(id<NSSwiftLoadProtocol>)class swiftLoad];
+    while (numClasses < newNumClasses) { // 3
+        numClasses = newNumClasses;
+        classes = (Class *)realloc(classes, sizeof(Class) * numClasses);
+        newNumClasses = objc_getClassList(classes, numClasses);
+        
+        for (int i = 0; i < numClasses; i++) {
+            Class class = classes[i];
+            if (class_conformsToProtocol(class, @protocol(NSSwiftLoadProtocol))) {
+                [(id<NSSwiftLoadProtocol>)class swiftLoad];
+            }
         }
     }
+    free(classes);
 }
 
 @interface NSSwiftLoader : NSObject
