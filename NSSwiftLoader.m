@@ -42,7 +42,7 @@
     for(uint32_t i = 0; i < c; ++i) {
         const char *image_name = _dyld_get_image_name(i);
         NSString *imageName = [NSString stringWithFormat:@"%s", image_name];
-        if ([imageName hasPrefix:mainBundlePath]) {
+        if ([imageName containsString:mainBundlePath]) {
             unsigned int classCount;
             const char **classes;
             classes = objc_copyClassNamesForImage(image_name, &classCount);
